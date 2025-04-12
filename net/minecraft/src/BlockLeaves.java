@@ -160,7 +160,7 @@ public class BlockLeaves extends BlockLeavesBase {
 	}
 	
 	public void onBlockDestroyedByPlayer(World var1, int var2, int var3, int var4, int var5) {
-		EntityPlayer plr = (EntityPlayer)var1.playerEntities.get(var5);
+		EntityPlayer plr = (EntityPlayer)var1.playerEntities.get(var2);
 		ItemStack current = plr.inventory.getCurrentItem();
 		
 		if(current != null && current.itemID == Item.shears.shiftedIndex) {

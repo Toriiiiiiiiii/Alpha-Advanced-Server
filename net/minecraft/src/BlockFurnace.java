@@ -4,6 +4,7 @@ import java.util.Random;
 
 public class BlockFurnace extends BlockContainer {
 	private final boolean isActive;
+	private Random random = new Random();
 
 	protected BlockFurnace(int var1, boolean var2) {
 		super(var1, Material.rock);
@@ -19,6 +20,26 @@ public class BlockFurnace extends BlockContainer {
 		super.onBlockAdded(var1, var2, var3, var4);
 		this.setDefaultDirection(var1, var2, var3, var4);
 	}
+	
+//	public void onBlockPlaced(World world, int x, int y, int z, int var5) {
+//		if(!world.multiplayerWorld) {
+//			EntityPlayer plr = (EntityPlayer)world.playerEntities.get(var5);
+//			double playerAngle = Math.abs(plr.rotationYaw % 360);
+//			
+//			byte direction = 0;
+//			if(playerAngle > 45 && playerAngle <= 135) {
+//				direction = 4;
+//			} if(playerAngle > 135 && playerAngle <= 225) {
+//				direction = 3;
+//			} if(playerAngle > 225 && playerAngle <= 315) {
+//				direction = 5;
+//			} if(playerAngle > 315 || playerAngle < 45) {
+//				direction = 2;
+//			}
+//			
+//			world.setBlockMetadataWithNotify(x, y, z, direction);
+//		}
+//	}
 
 	private void setDefaultDirection(World var1, int var2, int var3, int var4) {
 		int var5 = var1.getBlockId(var2, var3, var4 - 1);
@@ -70,5 +91,37 @@ public class BlockFurnace extends BlockContainer {
 
 	protected TileEntity getBlockEntity() {
 		return new TileEntityFurnace();
+	}
+	
+	public void onBlockRemoval(World world, int x, int y, int z) {
+		if(world.getBlockId(x, y, z) == 0) {
+			TileEntityFurnace var5 = (TileEntityFurnace)world.getBlockTileEntity(x, y, z);
+		
+			for(int var6 = 0; var6 < 3; ++var6) {
+				ItemStack var7 = var5.getStackInSlot(var6);
+				if(var7 != null) {
+					float var8 = this.random.nextFloat() * 0.8F + 0.1F;
+					float var9 = this.random.nextFloat() * 0.8F + 0.1F;
+					float var10 = this.random.nextFloat() * 0.8F + 0.1F;
+
+					while(var7.stackSize > 0) {
+						int var11 = this.random.nextInt(21) + 10;
+						if(var11 > var7.stackSize) {
+							var11 = var7.stackSize;
+						}
+
+						var7.stackSize -= var11;
+						EntityItem var12 = new EntityItem(world, (double)((float)x + var8), (double)((float)y + var9), (double)((float)z + var10), new ItemStack(var7.itemID, var11, var7.itemDmg));
+						float var13 = 0.05F;
+						var12.motionX = (double)((float)this.random.nextGaussian() * var13);
+						var12.motionY = (double)((float)this.random.nextGaussian() * var13 + 0.2F);
+						var12.motionZ = (double)((float)this.random.nextGaussian() * var13);
+						world.spawnEntityInWorld(var12);
+					}
+				}
+			}
+		}
+		
+		super.onBlockRemoval(world, x, y, z);
 	}
 }
