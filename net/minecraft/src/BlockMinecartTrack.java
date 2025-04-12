@@ -3,9 +3,12 @@ package net.minecraft.src;
 import java.util.Random;
 
 public class BlockMinecartTrack extends Block {
-	protected BlockMinecartTrack(int var1, int var2) {
+	public boolean powered;
+	
+	protected BlockMinecartTrack(int var1, int var2, boolean powered) {
 		super(var1, var2, Material.circuits);
 		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 2.0F / 16.0F, 1.0F);
+		this.powered = powered;
 	}
 
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World var1, int var2, int var3, int var4) {
@@ -29,6 +32,14 @@ public class BlockMinecartTrack extends Block {
 			this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 2.0F / 16.0F, 1.0F);
 		}
 
+	}
+
+	public int getBlockTextureFromSideAndMetadata(int var1, int var2) {
+		return var2 >= 6 ? this.blockIndexInTexture - 16 : this.blockIndexInTexture;
+	}
+
+	public boolean renderAsNormalBlock() {
+		return false;
 	}
 
 	public int getRenderType() {

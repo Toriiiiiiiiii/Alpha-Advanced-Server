@@ -9,7 +9,7 @@ public class Item {
 	public static Item pickaxeSteel = (new ItemPickaxe(1, 2)).setIconIndex(98);
 	public static Item axeSteel = (new ItemAxe(2, 2)).setIconIndex(114);
 	public static Item striker = (new ItemFlintAndSteel(3)).setIconIndex(5);
-	public static Item appleRed = (new ItemFood(4, 4)).setIconIndex(10);
+	public static Item appleRed = (new ItemFood(4, 4, 16)).setIconIndex(10);
 	public static Item bow = (new ItemBow(5)).setIconIndex(21);
 	public static Item arrow = (new Item(6)).setIconIndex(37);
 	public static Item coal = (new Item(7)).setIconIndex(7);
@@ -46,7 +46,7 @@ public class Item {
 	public static Item hoeGold = (new ItemHoe(38, 1)).setIconIndex(132);
 	public static Item seeds = (new ItemSeeds(39, Block.crops.blockID)).setIconIndex(9);
 	public static Item wheat = (new Item(40)).setIconIndex(25);
-	public static Item bread = (new ItemFood(41, 5)).setIconIndex(41);
+	public static Item bread = (new ItemFood(41, 5, 4)).setIconIndex(41);
 	public static Item helmetLeather = (new ItemArmor(42, 0, 0, 0)).setIconIndex(0);
 	public static Item plateLeather = (new ItemArmor(43, 0, 0, 1)).setIconIndex(16);
 	public static Item legsLeather = (new ItemArmor(44, 0, 0, 2)).setIconIndex(32);
@@ -68,10 +68,10 @@ public class Item {
 	public static Item legsGold = (new ItemArmor(60, 1, 4, 2)).setIconIndex(36);
 	public static Item bootsGold = (new ItemArmor(61, 1, 4, 3)).setIconIndex(52);
 	public static Item flint = (new Item(62)).setIconIndex(6);
-	public static Item porkRaw = (new ItemFood(63, 3)).setIconIndex(87);
-	public static Item porkCooked = (new ItemFood(64, 8)).setIconIndex(88);
+	public static Item porkRaw = (new ItemFood(63, 3, 1)).setIconIndex(87);
+	public static Item porkCooked = (new ItemFood(64, 8, 1)).setIconIndex(88);
 	public static Item painting = (new ItemPainting(65)).setIconIndex(26);
-	public static Item appleGold = (new ItemFood(66, 42)).setIconIndex(11);
+	public static Item appleGold = (new ItemFood(66, 42, 1)).setIconIndex(11);
 	public static Item sign = (new ItemSign(67)).setIconIndex(42);
 	public static Item doorWood = (new ItemDoor(68, Material.wood)).setIconIndex(43);
 	public static Item bucketEmpty = (new ItemBucket(69, 0)).setIconIndex(74);
@@ -98,12 +98,34 @@ public class Item {
 	public static Item fishingRod = (new Item(90)).setIconIndex(69);
 	public static Item record13 = (new ItemRecord(2000, "13")).setIconIndex(240);
 	public static Item recordCat = (new ItemRecord(2001, "cat")).setIconIndex(241);
+	
+	public static Item shears = (new ItemTool(2002, 3, 2, new Block[] {Block.leaves, Block.leavesPlr})).setIconIndex(242);
+	public static Item ingotCopper = (new Item(2003)).setIconIndex(243);
+	
+	public static Item swordCopper = (new ItemSword(2004, 2)).setIconIndex(244);
+	public static Item shovelCopper = (new ItemSpade(20205, 2)).setIconIndex(245);
+	public static Item pickaxeCopper = (new ItemPickaxe(2006, 2)).setIconIndex(246);
+	public static Item axeCopper = (new ItemAxe(2007, 2)).setIconIndex(247);
+	public static Item hoeCopper = (new ItemHoe(2008, 2)).setIconIndex(248);
+	
+	public static Item fertilizer = (new Item(2009)).setIconIndex(249);
+	public static Item hamburger = (new ItemFood(2010, 5, 8)).setIconIndex(250);
+	public static Item mug = (new Item(2011)).setIconIndex(251).setMaxStackSize(1);
+	public static Item tea = (new ItemFood(2012, 6, 1)).setIconIndex(252);
+	public static Item teaLeaves = (new Item(2013)).setIconIndex(253).setMaxStackSize(16);
+	public static Item friedEgg = (new ItemFood(2014, 4, 16)).setIconIndex(254);
+	
 	public final int shiftedIndex;
 	protected int maxStackSize = 64;
 	protected int maxDamage = 32;
 	protected int iconIndex;
 	protected boolean bFull3D = false;
 
+	public Item setMaxStackSize(int size) {
+		this.maxStackSize = size;
+		return this;
+	}
+	
 	protected Item(int var1) {
 		this.shiftedIndex = 256 + var1;
 		if(itemsList[256 + var1] != null) {
