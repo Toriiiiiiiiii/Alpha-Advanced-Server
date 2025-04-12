@@ -159,13 +159,13 @@ public class BlockLeaves extends BlockLeavesBase {
 		this.blockIndexInTexture = this.leafTexIndex + (var1 ? 0 : 1);
 	}
 	
-//	public void onBlockDestroyedByPlayer(World var1, int var2, int var3, int var4, int var5) {
-//		EntityPlayer plr = (EntityPlayer)var1.playerEntities.get(0);
-//		ItemStack current = plr.inventory.getCurrentItem();
-//		
-//		if(current != null && current.itemID == Item.shears.shiftedIndex) {
-//			this.brokenWithShears = true;
-//			plr.inventory.getCurrentItem().damageItem(1);
-//		}
-//	}
+	public void onBlockDestroyedByPlayer(World var1, int var2, int var3, int var4, int var5) {
+		EntityPlayer plr = (EntityPlayer)var1.playerEntities.get(var5);
+		ItemStack current = plr.inventory.getCurrentItem();
+		
+		if(current != null && current.itemID == Item.shears.shiftedIndex) {
+			this.brokenWithShears = true;
+			plr.inventory.getCurrentItem().damageItem(1);
+		}
+	}
 }
