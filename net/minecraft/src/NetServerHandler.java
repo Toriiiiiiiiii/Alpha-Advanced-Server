@@ -285,34 +285,28 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
 			}
 		} else {
 			int var3;
-			if(var1.toLowerCase().equalsIgnoreCase("/home")) {
+			if(var1.toLowerCase().equalsIgnoreCase("/spawn")) {
 				logger.info(this.playerEntity.username + " returned home");
 				var3 = this.mcServer.worldMngr.getTopSolidOrLiquidBlock(this.mcServer.worldMngr.spawnX, this.mcServer.worldMngr.spawnZ);
 				this.teleportTo((double)this.mcServer.worldMngr.spawnX + 0.5D, (double)var3 + 1.5D, (double)this.mcServer.worldMngr.spawnZ + 0.5D, 0.0F, 0.0F);
-			} else if(var1.toLowerCase().equalsIgnoreCase("/iron")) {
-				if(MinecraftServer.playerList.containsKey(this.playerEntity.username)) {
-					logger.info(this.playerEntity.username + " failed to iron!");
-					this.sendPacket(new Packet3Chat("\u00a7cYou can\'t /iron again so soon!"));
-				} else {
-					MinecraftServer.playerList.put(this.playerEntity.username, Integer.valueOf(6000));
-					logger.info(this.playerEntity.username + " ironed!");
-
-					for(var3 = 0; var3 < 4; ++var3) {
-						this.playerEntity.dropPlayerItem(new ItemStack(Item.ingotIron, 1));
-					}
+			} else if(var1.toLowerCase().equalsIgnoreCase("/sethome")) {
+				Double pos[] = new Double[] {this.playerEntity.posX, this.playerEntity.posY, this.playerEntity.posZ};
+				this.mcServer.homes.put(getUsername(), pos);
+				this.mcServer.saveHomes();
+				this.mcServer.homes.put(getUsername(), pos);
+				System.out.println(this.mcServer.homes);
+				this.sendPacket(new Packet3Chat("\u00a7cHome position set!"));
+			} else if(var1.toLowerCase().equalsIgnoreCase("/home")) {
+				if(!this.mcServer.homes.containsKey(getUsername())) {
+					this.sendPacket(new Packet3Chat("\u00a7cYou do not have a home position set!"));
+					return;
 				}
-			} else if(var1.toLowerCase().equalsIgnoreCase("/wood")) {
-				if(MinecraftServer.playerList.containsKey(this.playerEntity.username)) {
-					logger.info(this.playerEntity.username + " failed to wood!");
-					this.sendPacket(new Packet3Chat("\u00a7cYou can\'t /wood again so soon!"));
-				} else {
-					MinecraftServer.playerList.put(this.playerEntity.username, Integer.valueOf(6000));
-					logger.info(this.playerEntity.username + " wooded!");
-
-					for(var3 = 0; var3 < 4; ++var3) {
-						this.playerEntity.dropPlayerItem(new ItemStack(Block.sapling, 1));
-					}
-				}
+				
+				System.out.println(this.mcServer.homes);
+				Double[] pos = this.mcServer.homes.get(getUsername());
+				System.out.println(pos);
+				var3 = this.mcServer.worldMngr.getTopSolidOrLiquidBlock((int)pos[0].intValue(), (int)pos[2].intValue());
+				this.teleportTo(pos[0]+0.5D, (double)var3, pos[2]+0.5D, 0, 0);
 			} else {
 				String var4;
 				if(this.mcServer.configManager.isOp(this.playerEntity.username)) {

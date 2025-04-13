@@ -64,7 +64,18 @@ public class BlockDoor extends Block {
 			int var6 = var1.getBlockMetadata(var2, var3, var4);
 			if((var6 & 8) != 0) {
 				if(var1.getBlockId(var2, var3 - 1, var4) == this.blockID) {
-					this.blockActivated(var1, var2, var3 - 1, var4, var5);
+					var1.setBlock(var2, var3-1, var4, 0);
+					var1.setBlockAndMetadataWithNotify(var2, var3-1, var4, this.blockID, (var6 ^ 4)+8);
+//					var1.setBlockMetadataWithNotify(var2, var3 + 1, var4, (var6 ^ 4) + 8);
+				}
+
+				var1.setBlockMetadataWithNotify(var2, var3, var4, (var6 ^ 4));
+				var1.markBlocksDirty(var2, var3 - 2, var4, var2, var3, var4);
+				var1.markBlocksDirty(var2, var3, var4, var2, var3, var4);
+				if(Math.random() < 0.5D) {
+					var1.playSoundEffect((double)var2 + 0.5D, (double)var3 + 0.5D, (double)var4 + 0.5D, "random.door_open", 1.0F, var1.rand.nextFloat() * 0.1F + 0.9F);
+				} else {
+					var1.playSoundEffect((double)var2 + 0.5D, (double)var3 + 0.5D, (double)var4 + 0.5D, "random.door_close", 1.0F, var1.rand.nextFloat() * 0.1F + 0.9F);
 				}
 
 				return true;

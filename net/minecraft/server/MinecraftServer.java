@@ -1,16 +1,28 @@
 package net.minecraft.server;
 
 import java.awt.GraphicsEnvironment;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
+
 import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.ConsoleLogManager;
 import net.minecraft.src.EntityPlayerMP;
@@ -50,6 +62,8 @@ public class MinecraftServer implements ICommandListener, Runnable {
 	private List commands = Collections.synchronizedList(new ArrayList());
 	public EntityTracker entityTracker;
 	public boolean onlineMode;
+	
+	public HashMap<String, Double[]> homes = new HashMap<String, Double[]>();
 
 	public MinecraftServer() {
 		new ThreadSleepForeverServer(this);
@@ -74,6 +88,8 @@ public class MinecraftServer implements ICommandListener, Runnable {
 		if(var2.length() > 0) {
 			var3 = InetAddress.getByName(var2);
 		}
+		
+		this.loadHomes();
 
 		int var4 = this.propertyManagerObj.getIntProperty("server-port", 25565);
 		logger.info("Starting Minecraft server on " + (var2.length() == 0 ? "*" : var2) + ":" + var4);
@@ -103,6 +119,55 @@ public class MinecraftServer implements ICommandListener, Runnable {
 		return true;
 	}
 
+	public void parseHome(String line) {
+		String[] splitted = line.split("\\s+");
+		this.homes.put(splitted[0], new Double[] {(double) Double.parseDouble(splitted[1]),(double) Double.parseDouble(splitted[2]),(double) Double.parseDouble(splitted[3])});
+	}
+	
+	public void loadHomes() {
+		try {
+			// Open the file
+			FileInputStream fstream = new FileInputStream("homes");
+
+			// Get the object of DataInputStream
+			DataInputStream in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+
+			String strLine;
+
+			//Read File Line By Line
+			while ((strLine = br.readLine()) != null)   {
+				// Print the content on the console
+				this.parseHome(strLine);
+			}
+		} catch (IOException e) {
+			logger.warning("homes file was not found!");
+			File file = new File("homes");
+	        try {
+				file.createNewFile();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
+	
+	public void saveHomes() {
+		try {
+			FileWriter outFile = new FileWriter("homes");
+			for (Map.Entry<String, Double[]> entry : this.homes.entrySet()) {
+			    String user = entry.getKey();
+			    Double[] homePos = entry.getValue();
+			    
+			    System.out.println(user + " " + String.valueOf(homePos[0]) + " " + String.valueOf(homePos[1]) + " " + String.valueOf(homePos[2]));
+			    outFile.write(user + " " + String.valueOf(homePos[0]) + " " + String.valueOf(homePos[1]) + " " + String.valueOf(homePos[2]) + "\n");
+			    outFile.close();
+			}
+		} catch(IOException e) {
+			logger.severe("Could not save homes file");
+		}
+	}
+	
 	private void initWorld(String var1) {
 		logger.info("Preparing start region");
 		this.worldMngr = new WorldServer(new File("."), var1, this.propertyManagerObj.getBooleanProperty("monsters", false));
