@@ -305,8 +305,8 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
 				System.out.println(this.mcServer.homes);
 				Double[] pos = this.mcServer.homes.get(getUsername());
 				System.out.println(pos);
-				var3 = this.mcServer.worldMngr.getTopSolidOrLiquidBlock((int)pos[0].intValue(), (int)pos[2].intValue());
-				this.teleportTo(pos[0]+0.5D, (double)var3, pos[2]+0.5D, 0, 0);
+//				var3 = this.mcServer.worldMngr.getTopSolidOrLiquidBlock((int)pos[0].intValue(), (int)pos[2].intValue());
+				this.teleportTo(pos[0]+0.5D, pos[1]+1.5D, pos[2]+0.5D, 0, 0);
 			} else {
 				String var4;
 				if(this.mcServer.configManager.isOp(this.playerEntity.username)) {

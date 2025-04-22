@@ -41,10 +41,10 @@ public class Block {
 	public static final Block sponge = (new BlockSponge(19)).setHardness(0.6F).setStepSound(soundGrassFootstep);
 	public static final Block glass = (new BlockGlass(20, 49, Material.glass, false)).setHardness(0.3F).setStepSound(soundGlassFootstep);
 	public static final Block clothRed = (new Block(21, 120, Material.cloth)).setHardness(0.8F).setStepSound(soundClothFootstep);
-	public static final Block clothOrange = null;
+	public static final Block clothOrange = (new Block(22, 121+16, Material.cloth)).setHardness(0.8F).setStepSound(soundClothFootstep);
 	public static final Block clothYellow = (new Block(23, 118, Material.cloth)).setHardness(0.8F).setStepSound(soundClothFootstep);
 	public static final Block clothChartreuse = null;
-	public static final Block clothGreen = null;
+	public static final Block clothGreen = (new Block(25, 121+17, Material.cloth)).setHardness(0.8F).setStepSound(soundClothFootstep);
 	public static final Block clothSpringGreen = null;
 	public static final Block clothCyan = (new Block(27, 122, Material.cloth)).setHardness(0.8F).setStepSound(soundClothFootstep);;
 	public static final Block clothCapri = null;
@@ -124,6 +124,7 @@ public class Block {
 	public static final BlockFlower plantPurple = (BlockFlower)(new BlockFlower(102, 46+16)).setHardness(0.0F).setStepSound(soundGrassFootstep);
 	public static final Block cobbleMarble = (new Block(103, Block.blockFlint.blockIndexInTexture + 17, Material.rock)).setHardness(1.5F).setResistance(10.0F).setStepSound(soundStoneFootstep);
 	public static final Block marble = (new BlockStone(104, Block.blockFlint.blockIndexInTexture + 16, Block.cobbleMarble.blockID)).setHardness(1.5F).setResistance(10.0F).setStepSound(soundStoneFootstep);
+	public static final Block marblePillar = (new BlockMarblePillar(105)).setHardness(1.5F).setResistance(10.0F).setStepSound(soundStoneFootstep);
 	public int blockIndexInTexture;
 	public final int blockID;
 	protected float hardness;

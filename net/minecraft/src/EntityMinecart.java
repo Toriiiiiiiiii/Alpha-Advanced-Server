@@ -152,14 +152,22 @@ public class EntityMinecart extends Entity implements IInventory {
 			int var1 = MathHelper.floor_double(this.posX);
 			int var2 = MathHelper.floor_double(this.posY);
 			int var3 = MathHelper.floor_double(this.posZ);
-			if(this.worldObj.getBlockId(var1, var2 - 1, var3) == Block.minecartTrack.blockID) {
+			if(this.worldObj.getBlockId(var1, var2 - 1, var3) == Block.minecartTrack.blockID
+			|| this.worldObj.getBlockId(var1, var2 - 1, var3) == Block.minecartTrackPowered.blockID) {
 				--var2;
 			}
 
 			double var4 = 0.4D;
 			boolean var6 = false;
-			var7 = 1.0D / 128.0D;
-			if(this.worldObj.getBlockId(var1, var2, var3) == Block.minecartTrack.blockID) {
+			
+			if(this.worldObj.getBlockId(var1, var2, var3) != Block.minecartTrackPowered.blockID)
+				var7 = 1.0D / 128.0D;
+			else
+				var7 = -1.0D / 128.0D;
+			
+			boolean isPowered = this.worldObj.getBlockId(var1, var2, var3) == Block.minecartTrackPowered.blockID;
+			if(this.worldObj.getBlockId(var1, var2, var3) == Block.minecartTrack.blockID
+			|| this.worldObj.getBlockId(var1, var2, var3) == Block.minecartTrackPowered.blockID) {
 				Vec3D var9 = this.getPos(this.posX, this.posY, this.posZ);
 				int var10 = this.worldObj.getBlockMetadata(var1, var2, var3);
 				this.posY = (double)var2;
@@ -252,11 +260,11 @@ public class EntityMinecart extends Entity implements IInventory {
 					this.setPosition(this.posX, this.posY + (double)var11[1][1], this.posZ);
 				}
 
-				if(this.riddenByEntity != null) {
+				if(this.riddenByEntity != null && isPowered  == false) {
 					this.motionX *= (double)0.997F;
 					this.motionY *= 0.0D;
 					this.motionZ *= (double)0.997F;
-				} else {
+				} else if(isPowered == false) {
 					if(this.minecartType == 2) {
 						var36 = (double)MathHelper.sqrt_double(this.pushX * this.pushX + this.pushZ * this.pushZ);
 						if(var36 > 0.01D) {
@@ -279,10 +287,14 @@ public class EntityMinecart extends Entity implements IInventory {
 					this.motionX *= (double)0.96F;
 					this.motionY *= 0.0D;
 					this.motionZ *= (double)0.96F;
+				} else if(isPowered) {
+					this.motionX *= (double)1.1F;
+					this.motionY *= 0.0D;
+					this.motionZ *= (double)1.1F;
 				}
 
 				Vec3D var46 = this.getPos(this.posX, this.posY, this.posZ);
-				if(var46 != null && var9 != null) {
+				if(var46 != null && var9 != null && !isPowered) {
 					double var37 = (var9.yCoord - var46.yCoord) * 0.05D;
 					var20 = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
 					if(var20 > 0.0D) {
@@ -332,7 +344,7 @@ public class EntityMinecart extends Entity implements IInventory {
 					this.motionZ = var4;
 				}
 
-				if(this.onGround) {
+				if(this.onGround && !isPowered) {
 					this.motionX *= 0.5D;
 					this.motionY *= 0.5D;
 					this.motionZ *= 0.5D;
@@ -393,6 +405,41 @@ public class EntityMinecart extends Entity implements IInventory {
 				this.worldObj.spawnParticle("largesmoke", this.posX, this.posY + 0.8D, this.posZ, 0.0D, 0.0D, 0.0D);
 			}
 
+		}
+	}
+
+	public Vec3D getPosOffset(double var1, double var3, double var5, double var7) {
+		int var9 = MathHelper.floor_double(var1);
+		int var10 = MathHelper.floor_double(var3);
+		int var11 = MathHelper.floor_double(var5);
+		if(this.worldObj.getBlockId(var9, var10 - 1, var11) == Block.minecartTrack.blockID) {
+			--var10;
+		}
+
+		if(this.worldObj.getBlockId(var9, var10, var11) == Block.minecartTrack.blockID) {
+			int var12 = this.worldObj.getBlockMetadata(var9, var10, var11);
+			var3 = (double)var10;
+			if(var12 >= 2 && var12 <= 5) {
+				var3 = (double)(var10 + 1);
+			}
+
+			int[][] var13 = matrix[var12];
+			double var14 = (double)(var13[1][0] - var13[0][0]);
+			double var16 = (double)(var13[1][2] - var13[0][2]);
+			double var18 = Math.sqrt(var14 * var14 + var16 * var16);
+			var14 /= var18;
+			var16 /= var18;
+			var1 += var14 * var7;
+			var5 += var16 * var7;
+			if(var13[0][1] != 0 && MathHelper.floor_double(var1) - var9 == var13[0][0] && MathHelper.floor_double(var5) - var11 == var13[0][2]) {
+				var3 += (double)var13[0][1];
+			} else if(var13[1][1] != 0 && MathHelper.floor_double(var1) - var9 == var13[1][0] && MathHelper.floor_double(var5) - var11 == var13[1][2]) {
+				var3 += (double)var13[1][1];
+			}
+
+			return this.getPos(var1, var3, var5);
+		} else {
+			return null;
 		}
 	}
 
@@ -496,6 +543,10 @@ public class EntityMinecart extends Entity implements IInventory {
 
 	}
 
+	public float getShadowSize() {
+		return 0.0F;
+	}
+
 	public void applyEntityCollision(Entity var1) {
 		if(var1 != this.riddenByEntity) {
 			if(var1 instanceof EntityLiving && !(var1 instanceof EntityPlayer) && this.minecartType == 0 && this.motionX * this.motionX + this.motionZ * this.motionZ > 0.01D && this.riddenByEntity == null && var1.ridingEntity == null) {
@@ -562,5 +613,75 @@ public class EntityMinecart extends Entity implements IInventory {
 
 	public ItemStack getStackInSlot(int var1) {
 		return this.cargoItems[var1];
+	}
+
+	public ItemStack decrStackSize(int var1, int var2) {
+		if(this.cargoItems[var1] != null) {
+			ItemStack var3;
+			if(this.cargoItems[var1].stackSize <= var2) {
+				var3 = this.cargoItems[var1];
+				this.cargoItems[var1] = null;
+				return var3;
+			} else {
+				var3 = this.cargoItems[var1].splitStack(var2);
+				if(this.cargoItems[var1].stackSize == 0) {
+					this.cargoItems[var1] = null;
+				}
+
+				return var3;
+			}
+		} else {
+			return null;
+		}
+	}
+
+	public void setInventorySlotContents(int var1, ItemStack var2) {
+		this.cargoItems[var1] = var2;
+		if(var2 != null && var2.stackSize > this.getInventoryStackLimit()) {
+			var2.stackSize = this.getInventoryStackLimit();
+		}
+
+	}
+
+	public String getInvName() {
+		return "Minecart";
+	}
+
+	public int getInventoryStackLimit() {
+		return 64;
+	}
+
+	public void onInventoryChanged() {
+	}
+
+	public boolean interact(EntityPlayer var1) {
+		if(this.minecartType == 0) {
+			var1.mountEntity(this);
+		} else if(this.minecartType == 1) {
+			var1.displayGUIChest(this);
+		} else if(this.minecartType == 2) {
+			ItemStack var2 = var1.inventory.getCurrentItem();
+			if(var2 != null && var2.itemID == Item.coal.shiftedIndex) {
+				if(--var2.stackSize == 0) {
+					var1.inventory.setInventorySlotContents(var1.inventory.currentItem, (ItemStack)null);
+				}
+
+				this.fuel += 1200;
+			}
+
+			this.pushX = this.posX - var1.posX;
+			this.pushZ = this.posZ - var1.posZ;
+		}
+
+		return true;
+	}
+
+	public void setPositionAndRotation(double var1, double var3, double var5, float var7, float var8, int var9) {
+		this.minecartX = var1;
+		this.minecartY = var3;
+		this.minecartZ = var5;
+		this.minecartYaw = (double)var7;
+		this.minecartPitch = (double)var8;
+		this.turnProgress = var9;
 	}
 }

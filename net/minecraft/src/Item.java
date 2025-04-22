@@ -93,7 +93,7 @@ public class Item {
 	public static Item slimeBall = (new Item(85)).setIconIndex(30);
 	public static Item minecartBox = (new ItemMinecart(86, 1)).setIconIndex(151);
 	public static Item minecartEngine = (new ItemMinecart(87, 2)).setIconIndex(167);
-	public static Item egg = (new Item(88)).setIconIndex(12);
+	public static Item egg = (new Item(88)).setMaxStackSize(16).setIconIndex(12);
 	public static Item compass = (new Item(89)).setIconIndex(54);
 	public static Item fishingRod = (new Item(90)).setIconIndex(69);
 	public static Item record13 = (new ItemRecord(2000, "13")).setIconIndex(240);
@@ -114,6 +114,8 @@ public class Item {
 	public static Item tea = (new ItemFood(2012, 6, 1)).setIconIndex(252);
 	public static Item teaLeaves = (new Item(2013)).setIconIndex(253).setMaxStackSize(16);
 	public static Item friedEgg = (new ItemFood(2014, 4, 16)).setIconIndex(254);
+	
+	public static Item applePie = (new ItemFood(2015, 7, 1, 3)).setIconIndex(255);
 	
 	public final int shiftedIndex;
 	protected int maxStackSize = 64;

@@ -104,4 +104,9 @@ public final class ItemStack {
 	public ItemStack copy() {
 		return new ItemStack(this.itemID, this.stackSize, this.itemDmg);
 	}
+
+	public ItemStack splitStack(int var2) {
+		this.stackSize -= var2;
+		return new ItemStack(this.itemID, var2, this.itemDmg);
+	}
 }

@@ -54,6 +54,9 @@ public class BlockDoor extends Block {
 	}
 
 	public void onBlockClicked(World var1, int var2, int var3, int var4, EntityPlayer var5) {
+		int metadata = var1.getBlockMetadata(var2, var3, var4);
+		var1.setBlock(var2, var3, var4, 0);
+		var1.setBlockAndMetadataWithNotify(var2, var3, var4, this.blockID, metadata);
 		this.blockActivated(var1, var2, var3, var4, var5);
 	}
 
